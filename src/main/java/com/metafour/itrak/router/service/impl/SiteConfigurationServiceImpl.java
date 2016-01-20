@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,6 +43,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 		SiteConfig sc = new SiteConfig();
 		sc.setCode(site);
 		String iniurl = configUrlPrefix + site + configUrlSuffix;
+		logger.debug("ini file to download is {}", iniurl);
 		try {
 			URLConnection urlConn = new URL(iniurl).openConnection();
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConn.getInputStream()))) {
@@ -91,7 +93,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 
 	private String getLogo(String logo) throws Exception {
 		URLConnection urlConn = new URL(logo).openConnection();
-		byte[] bytes = org.apache.commons.net.util.Base64.encodeBase64(IOUtils.toByteArray(urlConn.getInputStream()));
+		byte[] bytes = Base64.getEncoder().encode(IOUtils.toByteArray(urlConn.getInputStream()));
 		return new String(bytes);
 	}
 	

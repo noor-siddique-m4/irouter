@@ -139,7 +139,7 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 		for (Event ev : request.getEvents()) {
 			Calendar cl = ev.getDate();
 			txt.append("EVENT~")
-				.append(request.getMessenger())
+				.append(ev.getMessenger())
 				.append("~")
 				.append(ev.getEvent())
 				.append("~")
@@ -164,7 +164,7 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 			txt.append("~H_\n");
 		}
 		txt.append("STOP\n");
-		logger.debug("Prepared file content to upload is \n {}", txt.toString());
+		logger.debug("Prepared file content to upload is \n{}", txt.toString());
 		String filename = request.getDevice() + "_" + UUID.randomUUID().toString() + ".txt";
 		try {
 			saveAtTmp(filename, txt.toString());

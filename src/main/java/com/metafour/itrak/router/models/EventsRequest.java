@@ -7,15 +7,8 @@ import java.util.List;
  *
  */
 public class EventsRequest {
-	private String messenger;
 	private String device;
 	private List<Event> events;
-	public String getMessenger() {
-		return messenger;
-	}
-	public void setMessenger(String messenger) {
-		this.messenger = messenger;
-	}
 	public String getDevice() {
 		return device;
 	}

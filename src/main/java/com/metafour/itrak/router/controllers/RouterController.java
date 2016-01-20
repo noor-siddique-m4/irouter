@@ -35,6 +35,7 @@ public class RouterController {
 
 	@RequestMapping("/config/{site}")
 	public SiteConfig config(@PathVariable String site) {
+		logger.debug("Configuration request for site {}", site);
 		try {
 			return configService.getSiteConfiguration(site);
 		} catch (SiteConfigurationNotFoundException e) {
@@ -45,6 +46,7 @@ public class RouterController {
 
 	@RequestMapping(value="/events/{site}", method=RequestMethod.POST)
 	public List<EventResponse> eventsUpload(@PathVariable String site, @RequestBody EventsRequest request) {
+		logger.debug("Events upload request for site {}", site);
 		try {
 			return eventsUploadService.uploadEvents(site, request);
 		} catch (ItrakRouterException e) {

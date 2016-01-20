@@ -1,0 +1,9 @@
+# logging
+logging.level.com.metafour: DEBUG
+
+# security
+security.basic.enabled=true
+security.enable-csrf=false
+security.user.name=irouter
+security.user.password=secret
+security.user.role=ADMIN

@@ -13,6 +13,7 @@ public class Event {
 	private Calendar date;
 	private String text;
 	private String signature;
+	private String messenger;
 	public String getId() {
 		return id;
 	}
@@ -48,5 +49,11 @@ public class Event {
 	}
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+	public String getMessenger() {
+		return messenger;
+	}
+	public void setMessenger(String messenger) {
+		this.messenger = messenger;
 	}
 }
