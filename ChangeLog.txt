@@ -1,2 +1,5 @@
+[05 Feb 2016]
+* [NS] Common response mechanism added
+
 [20 Jan 2016]
 * [NS] Initial commit

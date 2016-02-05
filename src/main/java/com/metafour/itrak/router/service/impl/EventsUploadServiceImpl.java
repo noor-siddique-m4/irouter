@@ -111,7 +111,14 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 									items.add(er);
 								}
 							}
+							if (j == 0) {
+								logger.error("File uploaded but server response is empty");
+								throw new ItrakRouterException("File uploaded but server response is empty");
+							}
 						}
+					} else {
+						logger.error("File uploaded but server response is empty");
+						throw new ItrakRouterException("File uploaded but server response is empty");
 					}
 					EntityUtils.consume(resEntity);
 				}
@@ -124,7 +131,7 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 	}
 
 	private String saveFilesAndGetFilename(String site, EventsRequest request, Map<String, String> images) throws ItrakRouterException {
-		StringBuilder txt = new StringBuilder("SITE~");
+		StringBuilder txt = new StringBuilder("START\nSITE~");
 		txt.append(site)
 			.append("\n")
 			.append("IMEI~")
@@ -202,6 +209,28 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 				}
 				int statuscode  = response.getStatusLine().getStatusCode();
 				logger.debug("Files upload status code {}", statuscode);
+				HttpEntity resEntity = response.getEntity();
+				if (resEntity != null) {
+					String rsptxt = "", txt = "";
+					try(BufferedReader rd = new BufferedReader(new InputStreamReader(resEntity.getContent()))) {
+						String line = "";
+						while ((line = rd.readLine()) != null) {
+							rsptxt += line;
+						}
+					} catch (Exception e) {
+						logger.error("Failed to read file upload response");
+						throw new ItrakRouterException("Failed to read file upload response", e);
+					}
+					if (rsptxt.contains(":") == Boolean.FALSE || fname.equals(txt = rsptxt.substring(rsptxt.indexOf(":"))) == Boolean.FALSE) {
+						txt = txt.isEmpty() ? "Expected response not found from server during file uploads" : txt;
+						logger.error(txt);
+						throw new ItrakRouterException(txt);
+					}
+				} else {
+					logger.error("Failed to upload files to server");
+					throw new ItrakRouterException("Failed to upload files to server");
+				}
+				EntityUtils.consume(resEntity);
 				return statuscode == 200;
 			} catch (IOException e1) {
 				logger.error("Failed to upload files to server", e1);
