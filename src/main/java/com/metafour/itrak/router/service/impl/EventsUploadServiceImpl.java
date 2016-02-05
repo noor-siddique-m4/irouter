@@ -221,7 +221,7 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 						logger.error("Failed to read file upload response");
 						throw new ItrakRouterException("Failed to read file upload response", e);
 					}
-					if (rsptxt.contains(":") == Boolean.FALSE || fname.equals(txt = rsptxt.substring(rsptxt.indexOf(":"))) == Boolean.FALSE) {
+					if (rsptxt.contains(":") == Boolean.FALSE || fname.equals(txt = rsptxt.substring(rsptxt.indexOf(":") + 1)) == Boolean.FALSE) {
 						txt = txt.isEmpty() ? "Expected response not found from server during file uploads" : txt;
 						logger.error(txt);
 						throw new ItrakRouterException(txt);
