@@ -63,6 +63,10 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 	private String fileReplaceText;
 	@Value("${events.tmpdir:/tmp/irouter/}")
 	private String tempFilesDir;
+	@Value("${events.checkuploadresponse:true}")
+	private Boolean checkUploadResponse;
+	@Value("${events.uploadresponseidentifier::}")
+	private String uploadResponseIdentifier;
 
 	@PostConstruct
 	private void init() {
@@ -211,7 +215,7 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 				logger.debug("Files upload status code {}", statuscode);
 				HttpEntity resEntity = response.getEntity();
 				if (resEntity != null) {
-					String rsptxt = "", txt = "";
+					String rsptxt = "";
 					try(BufferedReader rd = new BufferedReader(new InputStreamReader(resEntity.getContent()))) {
 						String line = "";
 						while ((line = rd.readLine()) != null) {
@@ -221,10 +225,10 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 						logger.error("Failed to read file upload response");
 						throw new ItrakRouterException("Failed to read file upload response", e);
 					}
-					if (rsptxt.contains(":") == Boolean.FALSE || fname.equals(txt = rsptxt.substring(rsptxt.indexOf(":") + 1)) == Boolean.FALSE) {
-						txt = txt.isEmpty() ? "Expected response not found from server during file uploads" : txt;
-						logger.error(txt);
-						throw new ItrakRouterException(txt);
+					if (checkUploadResponse && rsptxt.contains(uploadResponseIdentifier) == Boolean.FALSE) {
+						rsptxt = rsptxt.isEmpty() ? "Expected response not found from server during file upload" : rsptxt;
+						logger.error(rsptxt);
+						throw new ItrakRouterException(rsptxt);
 					}
 				} else {
 					logger.error("Failed to upload files to server");
