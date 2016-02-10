@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.metafour.itrak.router.exceptions.ItrakRouterException;
@@ -14,6 +15,7 @@ import com.metafour.itrak.router.exceptions.SiteConfigurationNotFoundException;
 import com.metafour.itrak.router.models.EventsRequest;
 import com.metafour.itrak.router.models.ResponseWrapper;
 import com.metafour.itrak.router.service.EventsUploadService;
+import com.metafour.itrak.router.service.MessengerService;
 import com.metafour.itrak.router.service.SiteConfigurationService;
 
 /**
@@ -30,7 +32,10 @@ public class RouterController {
 	@Autowired
 	EventsUploadService eventsUploadService;
 
-	@RequestMapping("/config/{site}")
+	@Autowired
+	MessengerService messengerService;
+
+	@RequestMapping("/{site}/config")
 	public ResponseWrapper config(@PathVariable String site) {
 		logger.debug("Configuration request for site {}", site);
 		ResponseWrapper rwrapper = new ResponseWrapper();
@@ -44,7 +49,21 @@ public class RouterController {
 		return rwrapper;
 	}
 
-	@RequestMapping(value="/events/{site}", method=RequestMethod.POST)
+	@RequestMapping("/{site}/messenger")
+	public ResponseWrapper messenger(@PathVariable String site, @RequestParam String email) {
+		logger.debug("Messenger code request for site {} and email {}", site, email);
+		ResponseWrapper rwrapper = new ResponseWrapper();
+		try {
+			rwrapper.setData(messengerService.getMessengerCode(site, email));
+			rwrapper.setSuccess(true);
+		} catch (ItrakRouterException e) {
+			logger.error("Failed to get messenger code for email " + email + " and site " + site, e);
+			rwrapper.setMessage(e.getMessage());
+		}
+		return rwrapper;
+	}
+
+	@RequestMapping(value="/{site}/events", method=RequestMethod.POST)
 	public ResponseWrapper eventsUpload(@PathVariable String site, @RequestBody EventsRequest request) {
 		logger.debug("Events upload request for site {}", site);
 		ResponseWrapper rwrapper = new ResponseWrapper();

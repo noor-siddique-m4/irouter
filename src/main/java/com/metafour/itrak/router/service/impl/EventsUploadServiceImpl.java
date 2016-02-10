@@ -51,7 +51,7 @@ public class EventsUploadServiceImpl implements EventsUploadService {
 	private SimpleDateFormat tmfrmt = new SimpleDateFormat("HH:mm");
 	private SimpleDateFormat dtfrmt = new SimpleDateFormat("dd/MM/yyyy");
 	
-	@Value("${events.basicurl:https://ms.m4.net/}")
+	@Value("${itrak.basicurl:https://ms.m4.net/}")
 	private String basicUrl;
 	@Value("${events.uploadurl:/PdaUpload}")
 	private String filesUploadSuffix;
