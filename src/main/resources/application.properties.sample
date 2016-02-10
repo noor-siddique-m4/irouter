@@ -7,3 +7,10 @@ security.enable-csrf=false
 security.user.name=irouter
 security.user.password=secret
 security.user.role=ADMIN
+
+# Tomcat connectors - HTTP and HTTPS
+server.port=8443
+server.port.http=8080
+server.ssl.key-store=classpath:keystore.p12
+server.ssl.key-store-password=changeit
+server.ssl.key-password=changeit
